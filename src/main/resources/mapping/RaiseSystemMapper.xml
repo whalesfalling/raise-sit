@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.the.raise.dao.RaiseSystemMapper" >
+  <resultMap id="BaseResultMap" type="com.the.raise.model.RaiseSystem" >
+    <id column="sysid" property="sysid" jdbcType="INTEGER" />
+    <result column="sysname" property="sysname" jdbcType="VARCHAR" />
+    <result column="sysvalue" property="sysvalue" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selectRaiseSystemBySysname" resultType="java.lang.String" parameterType="java.lang.String" >
+    select 
+    sysvalue
+    from raise_system
+    where sysname = #{sysname,jdbcType=VARCHAR}
+  </select>
+
+  <update id="updateRaiseSystemBySysname" parameterType="com.the.raise.model.RaiseSystem" >
+    update raise_system
+    set sysvalue = #{sysvalue,jdbcType=VARCHAR}
+    where sysname = #{sysname,jdbcType=VARCHAR}
+  </update>
+</mapper>

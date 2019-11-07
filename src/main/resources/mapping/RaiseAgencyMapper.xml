@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.the.raise.dao.RaiseAgencyMapper" >
+  <resultMap id="BaseResultMap" type="com.the.raise.model.RaiseAgency" >
+    <id column="acustomer" property="acustomer" jdbcType="VARCHAR" />
+    <result column="aprovince" property="aprovince" jdbcType="VARCHAR" />
+    <result column="acity" property="acity" jdbcType="VARCHAR" />
+    <result column="aprice" property="aprice" jdbcType="REAL" />
+    <result column="adate" property="adate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    acustomer, aprovince, acity, aprice, adate
+  </sql>
+
+  <select id="selectRaiseAgency" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from raise_agency
+    where acustomer = #{acustomer,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectRaiseAgencyList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from raise_agency
+  </select>
+
+  <insert id="insertRaiseAgency" parameterType="com.the.raise.model.RaiseAgency" >
+    insert into raise_agency (acustomer, aprovince, acity, 
+      aprice, adate)
+    values (#{acustomer,jdbcType=VARCHAR}, #{aprovince,jdbcType=VARCHAR}, #{acity,jdbcType=VARCHAR}, 
+      #{aprice,jdbcType=REAL}, #{adate,jdbcType=TIMESTAMP})
+  </insert>
+
+</mapper>

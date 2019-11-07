@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8">
+    <title>天际众筹</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <!-- Le styles -->
+    <link href="http://fonts.googleapis.com/css?family=Oxygen|Marck+Script" rel="stylesheet" type="text/css">
+    <link href="/admin/css/bootstrap.css" rel="stylesheet">
+    <link href="/admin/css/font-awesome.css" rel="stylesheet">
+    <link href="/admin/css/admin.css" rel="stylesheet">
+	<link rel="shortcut icon" href="/assets/ico/favicon.png">
+	<link rel="stylesheet" href="/node_modules/element-ui/lib/theme-chalk/index.css">
+	<script src="/node_modules/vue/dist/vue.js"></script>
+	<script src="/node_modules/element-ui/lib/index.js"></script>
+	<script src="/node_modules/axios/dist/axios.min.js"></script>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+	<style>
+		.demo-table-expand {
+			font-size: 0;
+		}
+		.demo-table-expand label {
+			width: 90px;
+			color: #99a9bf;
+		}
+		.demo-table-expand .el-form-item {
+			margin-right: 0;
+			margin-bottom: 0;
+			width: 50%;
+		}
+		.el-form-item input{
+			height: 30px;
+		}
+	</style>
+</head>    
+<body>
+
+<div class="container">
+		
+	<div class="row">
+		
+		<div class="span2">
+		
+		<div class="main-left-col">
+		
+			<h1><i class="icon-shopping-cart icon-large"></i> Adminize </h1>
+
+			<ul class="side-nav" id="top">
+				<li>
+					<a href="/Login/toAdmin"><i class="icon-home"></i> 首页</a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toTopUpDispose"><i class="icon-shopping-cart"></i> 充值信息处理 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toTopUpHistory"><i class="icon-sitemap"></i> 充值历史记录 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toAgencyDispose"><i class="icon-signal"></i> 代理信息查询 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toWithdrawalDispose"><i class="icon-group"></i> 提现申请处理 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toWithdrawalHistory"><i class="icon-sitemap"></i> 提现历史记录 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toAddAdmin"><i class="icon-bullhorn"></i> 新增后台人员 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toUploadImg"><i class="icon-info-sign"></i> 付款二维码 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toSystemSet"><i class="icon-cogs"></i> 系统基础设置 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toWindowsSet"><i class="icon-cogs"></i> 联系方式设置 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toUseUserList"><i class="icon-sitemap"></i> 普通用户查询 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toAgencyUserList"><i class="icon-signal"></i> 代理用户查询 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toSystemUserList"><i class="icon-group"></i> 后台人员查询 </a>
+				</li>
+			</ul>
+
+		</div> <!-- end main-left-col -->
+
+		</div> <!-- end span2 -->
+		<script>
+			new Vue({
+				"el" : "#top",
+				data :{
+					userIdentity: 3,
+				},
+				created: function(){
+					axios({
+						method: 'get',
+						url: '/Admin/queryLoginUser',
+					}).then(res => {
+						this.userIdentity = res.data.user.identity;
+					});
+				}
+			});
+		</script>
+	<div class="span10">
+		
+	<div class="secondary-masthead">
+	
+		<ul class="nav nav-pills pull-right">
+			<li class="dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-user"></i> 系统设置 <b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="/Login/toSetPassword">修改密码</a></li>
+					<li class="divider"></li>
+					<li><a href="/Login/LoginOut">退出</a></li>
+				</ul>
+			</li>
+		</ul>
+
+		<ul class="breadcrumb">
+			<li>
+				<a href="#">Admin</a> <span class="divider">/</span>
+			</li>
+			<li class="active">新增后台人员</li>
+		</ul>
+		
+	</div>
+	
+	<div class="main-area dashboard" id="context">
+		<div>
+			<el-card class="box-card">
+				<div slot="header" class="clearfix">
+					<span style="font-size: 16px;">新增后台人员</span>
+				</div>
+				<el-form label-position="left" inline class="demo-table-expand">
+					<el-form-item label="员工姓名">
+						<el-input v-model="name"></el-input>
+					</el-form-item>
+					<el-form-item label="员工手机号">
+						<el-input v-model="phone"></el-input>
+					</el-form-item>
+					<el-form-item label="员工性别">
+						<el-input v-model="six"></el-input>
+					</el-form-item>
+					<el-form-item label="员工人工号">
+						<el-input v-model="recommend"></el-input>
+					</el-form-item>
+					<el-form-item label="初始密码">
+						<span>1234</span>
+					</el-form-item>
+					<el-form-item style="width: 100%;text-align: right;">
+						<el-button type="primary" @click="submitForm">立即创建</el-button>
+					</el-form-item>
+				</el-form>
+			</el-card>
+		</div>
+	</div>
+	
+	</div> <!-- end span10 -->
+		
+	</div> <!-- end row -->
+		
+</div> <!-- end container -->
+<style>
+	.text {
+		font-size: 14px;
+	}
+
+	.item {
+		padding: 18px 0;
+	}
+
+	.box-card {
+		width:80%;
+		margin-left: 10%;
+	}
+</style>
+<script>
+	let Vuebit = new Vue({
+		"el" : "#context",
+		data :{
+			name: null,
+			phone: null,
+			six: null,
+			recommend: null
+		},
+		methods:{
+			submitForm:function () {
+				if(this.name==null||this.name.length==0){
+					this.$message.error("人员姓名不能为空！");
+				}else if(this.phone==null||this.phone.length==0){
+					this.$message.error("电话号码不能为空！");
+				}else if(this.six==null||this.six.length==0){
+					this.$message.error("人员性别不能为空！");
+				}else if(this.six!='男'&&this.six!='女'){
+					this.$message.error("人员性别输入有误！");
+				}else if(this.recommend==null||this.recommend.length==0){
+					this.$message.error("人员人工号不能为空！");
+				}else{
+					axios({
+						method: 'post',
+						url: '/Admin/addAdmin',
+						data: {
+							name: this.name,
+							phone: this.phone,
+							six: this.six,
+							recommend: this.recommend
+						}
+					}).then(res => {
+						if(res.data.error!=null){
+							this.$notify({
+								title: '系统消息',
+								message: res.data.error,
+								type: 'error'
+							});
+						}else{
+							this.name = null;
+							this.phone = null;
+							this.six = null;
+							this.recommend = null;
+							this.$notify({
+								title: '系统消息',
+								message: '后台工作人员新增成功！',
+								type: 'success'
+							});
+						}
+					});
+				}
+			}
+		}
+	});
+</script>
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="/admin/js/jquery.min.js"></script>
+<script src="/admin/js/bootstrap.js"></script>
+
+
+
+</body>
+</html>

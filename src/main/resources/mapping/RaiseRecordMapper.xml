@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.the.raise.dao.RaiseRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.the.raise.model.RaiseRecord" >
+    <id column="rno" property="rno" jdbcType="VARCHAR" />
+    <result column="rclient" property="rclient" jdbcType="VARCHAR" />
+    <result column="rtype" property="rtype" jdbcType="VARCHAR" />
+    <result column="rmonny" property="rmonny" jdbcType="REAL" />
+    <result column="rgoldnum" property="rgoldnum" jdbcType="INTEGER" />
+    <result column="rprizenum" property="rprizenum" jdbcType="INTEGER" />
+    <result column="rstate" property="rstate" jdbcType="VARCHAR" />
+    <result column="rdescribe" property="rdescribe" jdbcType="VARCHAR" />
+    <result column="rdate" property="rdate" jdbcType="TIMESTAMP" />
+    <result column="setdate" property="setdate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    rno, rclient, rtype, rmonny, rgoldnum, rprizenum, rstate, rdescribe, rdate, setdate
+  </sql>
+  <select id="selectTopUpMoneyByRno" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from raise_record
+    where rno = #{rno,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectMyRaiseRecord" resultMap="BaseResultMap" parameterType="com.the.raise.model.RaiseRecord" >
+    select
+    <include refid="Base_Column_List" />
+    from raise_record
+    where rclient = #{rclient,jdbcType=VARCHAR}
+    order by rdate desc
+  </select>
+
+  <select id="selectMyRaiseAgency" resultMap="BaseResultMap" parameterType="com.the.raise.model.RaiseRecord" >
+    select
+    <include refid="Base_Column_List" />
+    from raise_record
+    where rclient = #{rclient,jdbcType=VARCHAR}
+    and rtype = #{rtype,jdbcType=VARCHAR}
+    order by rdate desc
+  </select>
+
+  <select id="selectTopUpMoneyList" resultMap="BaseResultMap" parameterType="com.the.raise.model.RaiseRecord" >
+    select
+    <include refid="Base_Column_List" />
+    from raise_record
+    where rstate = #{rstate,jdbcType=VARCHAR}
+    and rtype = '充值'
+    order by rdate
+  </select>
+
+  <select id="selectAgencyMoneyList" resultMap="BaseResultMap" parameterType="com.the.raise.model.RaiseRecord" >
+    select
+    <include refid="Base_Column_List" />
+    from raise_record
+    where rstate = #{rstate,jdbcType=VARCHAR}
+    and rtype = '代理'
+    order by rdate
+  </select>
+
+  <select id="selectMyWithdrawal" resultMap="BaseResultMap" parameterType="com.the.raise.model.RaiseRecord" >
+    select
+    <include refid="Base_Column_List" />
+    from raise_record
+    where rstate = #{rstate,jdbcType=VARCHAR}
+    and rtype = '提现'
+    order by rdate
+  </select>
+
+
+  <insert id="insertRaiseRecord" parameterType="com.the.raise.model.RaiseRecord" >
+    insert into raise_record (rno, rclient, rtype, 
+      rmonny, rgoldnum, rprizenum, 
+      rstate, rdescribe, rdate)
+    values (#{rno,jdbcType=VARCHAR}, #{rclient,jdbcType=VARCHAR}, #{rtype,jdbcType=VARCHAR}, 
+      #{rmonny,jdbcType=REAL}, #{rgoldnum,jdbcType=INTEGER}, #{rprizenum,jdbcType=INTEGER}, 
+      #{rstate,jdbcType=VARCHAR}, #{rdescribe,jdbcType=VARCHAR}, #{rdate,jdbcType=TIMESTAMP})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.the.raise.model.RaiseRecord" >
+    update raise_record
+    set rclient = #{rclient,jdbcType=VARCHAR},
+      rtype = #{rtype,jdbcType=VARCHAR},
+      rmonny = #{rmonny,jdbcType=REAL},
+      rgoldnum = #{rgoldnum,jdbcType=INTEGER},
+      rprizenum = #{rprizenum,jdbcType=INTEGER},
+      rstate = #{rstate,jdbcType=VARCHAR},
+      rdescribe = #{rdescribe,jdbcType=VARCHAR},
+      setdate = #{rdate,jdbcType=TIMESTAMP}
+    where rno = #{rno,jdbcType=VARCHAR}
+  </update>
+</mapper>

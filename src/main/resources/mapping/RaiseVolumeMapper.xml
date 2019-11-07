@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.the.raise.dao.RaiseVolumeMapper" >
+  <resultMap id="BaseResultMap" type="com.the.raise.model.RaiseVolume" >
+    <id column="vserial" property="vserial" jdbcType="VARCHAR" />
+    <result column="vpserial" property="vpserial" jdbcType="INTEGER" />
+    <result column="vstate" property="vstate" jdbcType="VARCHAR" />
+    <result column="vuserid" property="vuserid" jdbcType="VARCHAR" />
+    <result column="vusetime" property="vusetime" jdbcType="TIMESTAMP" />
+    <result column="vconversiontime" property="vconversiontime" jdbcType="TIMESTAMP" />
+    <result column="vfaluretime" property="vfaluretime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    vserial, vpserial, vstate, vuserid, vusetime, vconversiontime, vfaluretime
+  </sql>
+  <select id="selectByVserial" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from raise_volume
+    where vserial = #{vserial,jdbcType=VARCHAR}
+  </select>
+
+  <select id="useVserial" resultMap="BaseResultMap" parameterType="com.the.raise.model.RaiseVolume" >
+    select
+    <include refid="Base_Column_List" />
+    from raise_volume
+    where vuserid = #{vuserid,jdbcType=VARCHAR}
+    and vpserial = #{vpserial,jdbcType=INTEGER}
+    and vstate = #{vstate,jdbcType=VARCHAR}
+  </select>
+
+  <select id="queryBetVserialList" resultMap="BaseResultMap" parameterType="com.the.raise.model.RaiseVolume" >
+    select
+    <include refid="Base_Column_List" />
+    from raise_volume
+    where vpserial = #{vpserial,jdbcType=INTEGER}
+    and vstate = #{vstate,jdbcType=VARCHAR}
+  </select>
+
+  <select id="queryMyVserial" resultMap="BaseResultMap" parameterType="com.the.raise.model.RaiseVolume" >
+    select
+    <include refid="Base_Column_List" />
+    from raise_volume
+    where vuserid = #{vuserid,jdbcType=VARCHAR}
+    order by vconversiontime desc
+  </select>
+
+  <select id="queryVserialNumber" resultType="java.lang.Integer" >
+    select
+    count(*)
+    from raise_volume
+  </select>
+
+  <select id="queryBetVserialNumber" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+    select
+    count(*)
+    from raise_volume
+    where vpserial = #{vpserial,jdbcType=INTEGER}
+    and vstate = '已使用'
+  </select>
+
+  <insert id="addRaiseVolume" parameterType="com.the.raise.model.RaiseVolume" >
+    insert into raise_volume (vserial, vpserial, vstate, 
+      vuserid, vusetime, vconversiontime, 
+      vfaluretime)
+    values (#{vserial,jdbcType=VARCHAR}, #{vpserial,jdbcType=INTEGER}, #{vstate,jdbcType=VARCHAR}, 
+      #{vuserid,jdbcType=VARCHAR}, #{vusetime,jdbcType=TIMESTAMP}, #{vconversiontime,jdbcType=TIMESTAMP}, 
+      #{vfaluretime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <update id="updateVserial" parameterType="com.the.raise.model.RaiseVolume" >
+    update raise_volume
+    set vpserial = #{vpserial,jdbcType=INTEGER},
+      vstate = #{vstate,jdbcType=VARCHAR},
+      vuserid = #{vuserid,jdbcType=VARCHAR},
+      vusetime = #{vusetime,jdbcType=TIMESTAMP},
+      vconversiontime = #{vconversiontime,jdbcType=TIMESTAMP},
+      vfaluretime = #{vfaluretime,jdbcType=TIMESTAMP}
+    where vserial = #{vserial,jdbcType=VARCHAR}
+  </update>
+</mapper>

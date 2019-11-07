@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.the.raise.dao.RaiseUserMapper" >
+  <resultMap id="BaseResultMap" type="com.the.raise.model.RaiseUser" >
+    <id column="userid" property="userid" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="card" property="card" jdbcType="VARCHAR" />
+    <result column="sumMoney" property="summoney" jdbcType="REAL" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="recommend" property="recommend" jdbcType="VARCHAR" />
+    <result column="goldNumber" property="goldnumber" jdbcType="INTEGER" />
+    <result column="prizeNumber" property="prizenumber" jdbcType="INTEGER" />
+    <result column="identity" property="identity" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="setNumber" property="setNumber" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    userid, name, sex, phone, card, sumMoney, province, city, recommend, goldNumber, 
+    prizeNumber, identity, password, setNumber
+  </sql>
+
+  <select id="QueryRaiseUserByPhone" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from raise_user
+    where phone = #{phone,jdbcType=VARCHAR}
+  </select>
+
+  <select id="QueryRaiseUserByIdentity" resultType="java.lang.Integer" parameterType="java.lang.String" >
+    select
+    count(*)
+    from raise_user
+    where identity = #{identity,jdbcType=VARCHAR}
+  </select>
+
+  <select id="QueryRaiseUserByUserid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from raise_user
+    where userid = #{userid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="QueryRaiseUserListByIdentity" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from raise_user
+    where identity = #{identity,jdbcType=VARCHAR}
+  </select>
+
+  <insert id="AddRaiseUser" parameterType="com.the.raise.model.RaiseUser" >
+    insert into raise_user (userid, name, sex, 
+      phone, card, sumMoney, 
+      province, city, recommend, 
+      goldNumber, prizeNumber, identity, 
+      password,setNumber)
+    values (#{userid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{card,jdbcType=VARCHAR}, #{summoney,jdbcType=REAL}, 
+      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{recommend,jdbcType=VARCHAR}, 
+      #{goldnumber,jdbcType=INTEGER}, #{prizenumber,jdbcType=INTEGER}, #{identity,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR},#{setNumber,jdbcType=INTEGER})
+  </insert>
+
+  <update id="UpdateRaiseUserByUserid" parameterType="com.the.raise.model.RaiseUser" >
+    update raise_user
+    set name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      card = #{card,jdbcType=VARCHAR},
+      sumMoney = #{summoney,jdbcType=REAL},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      recommend = #{recommend,jdbcType=VARCHAR},
+      goldNumber = #{goldnumber,jdbcType=INTEGER},
+      prizeNumber = #{prizenumber,jdbcType=INTEGER},
+      identity = #{identity,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      setNumber = #{setNumber,jdbcType=INTEGER}
+    where userid = #{userid,jdbcType=VARCHAR}
+  </update>
+</mapper>

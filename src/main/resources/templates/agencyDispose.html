@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8">
+    <title>天际众筹</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <!-- Le styles -->
+    <link href="http://fonts.googleapis.com/css?family=Oxygen|Marck+Script" rel="stylesheet" type="text/css">
+    <link href="/admin/css/bootstrap.css" rel="stylesheet">
+    <link href="/admin/css/font-awesome.css" rel="stylesheet">
+    <link href="/admin/css/admin.css" rel="stylesheet">
+	<link rel="shortcut icon" href="/assets/ico/favicon.png">
+	<link rel="stylesheet" href="/node_modules/element-ui/lib/theme-chalk/index.css">
+	<script src="/node_modules/vue/dist/vue.js"></script>
+	<script src="/node_modules/element-ui/lib/index.js"></script>
+	<script src="/node_modules/axios/dist/axios.min.js"></script>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+	<style>
+		.demo-table-expand {
+			font-size: 0;
+		}
+		.demo-table-expand label {
+			width: 90px;
+			color: #99a9bf;
+		}
+		.demo-table-expand .el-form-item {
+			margin-right: 0;
+			margin-bottom: 0;
+			width: 50%;
+		}
+	</style>
+</head>    
+<body>
+
+<div class="container">
+		
+	<div class="row">
+		
+		<div class="span2">
+		
+		<div class="main-left-col">
+		
+			<h1><i class="icon-shopping-cart icon-large"></i> Adminize </h1>
+
+			<ul class="side-nav" id="top">
+				<li>
+					<a href="/Login/toAdmin"><i class="icon-home"></i> 首页</a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toTopUpDispose"><i class="icon-shopping-cart"></i> 充值信息处理 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toTopUpHistory"><i class="icon-sitemap"></i> 充值历史记录 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toAgencyDispose"><i class="icon-signal"></i> 代理信息查询 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toWithdrawalDispose"><i class="icon-group"></i> 提现申请处理 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toWithdrawalHistory"><i class="icon-sitemap"></i> 提现历史记录 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toAddAdmin"><i class="icon-bullhorn"></i> 新增后台人员 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toUploadImg"><i class="icon-info-sign"></i> 付款二维码 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toSystemSet"><i class="icon-cogs"></i> 系统基础设置 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toWindowsSet"><i class="icon-cogs"></i> 联系方式设置 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toUseUserList"><i class="icon-sitemap"></i> 普通用户查询 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toAgencyUserList"><i class="icon-signal"></i> 代理用户查询 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toSystemUserList"><i class="icon-group"></i> 后台人员查询 </a>
+				</li>
+			</ul>
+
+		</div> <!-- end main-left-col -->
+
+		</div> <!-- end span2 -->
+		<script>
+			new Vue({
+				"el" : "#top",
+				data :{
+					userIdentity: 2,
+				},
+				created: function(){
+					axios({
+						method: 'get',
+						url: '/Admin/queryLoginUser',
+					}).then(res => {
+						this.userIdentity = res.data.user.identity;
+					});
+				}
+			});
+		</script>
+	<div class="span10">
+		
+	<div class="secondary-masthead">
+	
+		<ul class="nav nav-pills pull-right">
+			<li class="dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-user"></i> 系统设置 <b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="/Login/toSetPassword">修改密码</a></li>
+					<li class="divider"></li>
+					<li><a href="/Login/LoginOut">退出</a></li>
+				</ul>
+			</li>
+		</ul>
+
+		<ul class="breadcrumb">
+			<li>
+				<a href="#">Admin</a> <span class="divider">/</span>
+			</li>
+			<li class="active">代理付款查询</li>
+		</ul>
+		
+	</div>
+	
+	<div class="main-area dashboard" id="context">
+		<template>
+			<el-dialog title="用户信息展示" :visible.sync="showUser">
+				<el-form label-position="left" inline class="demo-table-expand">
+					<el-form-item label="用户姓名">
+						<span>{{ user.name }}</span>
+					</el-form-item>
+					<el-form-item label="账户余额">
+						<span>{{ user.summoney }}元</span>
+					</el-form-item>
+					<el-form-item label="手机号码">
+						<span>{{ user.phone }}</span>
+					</el-form-item>
+					<el-form-item label="客户号">
+						<span>{{ user.userid }}</span>
+					</el-form-item>
+				</el-form>
+				<div slot="footer" class="dialog-footer">
+					<el-button @click="showUser = false">关 闭</el-button>
+				</div>
+			</el-dialog>
+			<el-table
+					:data="queryTopUpMoneyList"
+					border
+					height="360"
+					style="width: 100%">
+				<el-table-column
+						fixed
+						prop="rdate"
+						label="充值时间"
+						width="200">
+				</el-table-column>
+				<el-table-column
+						prop="rclient"
+						label="交易客户号"
+						width="120">
+				</el-table-column>
+				<el-table-column
+						prop="rtype"
+						label="交易类型"
+						width="100">
+				</el-table-column>
+				<el-table-column
+						prop="rmonny"
+						label="充值金额"
+						width="100">
+				</el-table-column>
+				<el-table-column
+						prop="rstate"
+						label="充值状态"
+						width="100">
+				</el-table-column>
+				<el-table-column
+						prop="rno"
+						label="交易流水号"
+						width="180">
+				</el-table-column>
+				<el-table-column
+						fixed="right"
+						label="操作"
+						width="160">
+					<template slot-scope="scope">
+						<el-button type="text" size="small" @click="queryUser(scope.row.rclient)">用户信息</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
+		</template>
+	</div>
+	
+	</div> <!-- end span10 -->
+		
+	</div> <!-- end row -->
+		
+</div> <!-- end container -->
+<style>
+	.text {
+		font-size: 14px;
+	}
+
+	.item {
+		padding: 18px 0;
+	}
+
+	.box-card {
+		width:80%;
+		margin-left: 10%;
+	}
+</style>
+<script>
+	let Vuebit = new Vue({
+		"el" : "#context",
+		data :{
+			queryTopUpMoneyList: [],
+			showUser: false,
+			user: []
+		},
+		methods:{
+			formatNumber: function(n) {
+				n = n.toString()
+				return n[1] ? n : '0' + n;
+			},
+			formatTime: function(number, format) {
+				let time = new Date(number)
+				let newArr = []
+				let formatArr = ['Y', 'M', 'D', 'h', 'm', 's']
+				newArr.push(time.getFullYear())
+				newArr.push(this.formatNumber(time.getMonth() + 1))
+				newArr.push(this.formatNumber(time.getDate()))
+
+				newArr.push(this.formatNumber(time.getHours()))
+				newArr.push(this.formatNumber(time.getMinutes()))
+				newArr.push(this.formatNumber(time.getSeconds()))
+
+				for (let i in newArr) {
+					format = format.replace(formatArr[i], newArr[i])
+				}
+				return format;
+			},
+			queryUser: function(rclient){
+				axios({
+					method: 'post',
+					url: '/Admin/queryUser',
+					data:{
+						rclient : rclient
+					}
+				}).then(res => {
+					this.user = res.data.user;
+					this.showUser = true;
+				})
+			}
+		},
+		created: function(){
+			axios({
+				method: 'get',
+				url: '/Admin/queryAgencyMoneyList',
+			}).then(res => {
+				let list = res.data.agencyMoneyList;
+				for(let i = 0,length = list.length; i < length; i++){
+					list[i].rdate = this.formatTime(list[i].rdate,"Y年M月D日 h:m:s");
+					list[i].rmonny = list[i].rmonny + "元";
+				}
+				this.queryTopUpMoneyList = list;
+			});
+		}
+	});
+</script>
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="/admin/js/jquery.min.js"></script>
+<script src="/admin/js/bootstrap.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>天际众筹</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="keywords" content="" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- bootstrap-css -->
+<link href="/cpts/css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+<link rel="shortcut icon" href="/assets/ico/favicon.png">
+<!--// bootstrap-css -->
+<!-- css -->
+<link rel="stylesheet" href="/cpts/css/style.css" type="text/css" media="all" />
+<link rel="stylesheet" href="/cpts/css/flexslider.css" type="text/css" media="screen" property="" />
+<link rel="stylesheet" href="/node_modules/element-ui/lib/theme-chalk/index.css">
+<!--// css -->
+<!-- font-awesome icons -->
+<link href="/cpts/css/font-awesome.css" rel="stylesheet">
+<!-- //font-awesome icons -->
+<!-- font -->
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300' rel='stylesheet' type='text/css'>
+<!-- //font -->
+<script type="text/javascript" src="/cpts/js/jquery-2.1.4.min.js"></script>
+<script src="/cpts/js/bootstrap.js"></script>
+<script src="/node_modules/vue/dist/vue.js"></script>
+<script src="/node_modules/element-ui/lib/index.js"></script>
+<script src="/node_modules/axios/dist/axios.min.js"></script>
+<style>
+	.demo-table-expand {
+		font-size: 0;
+	}
+	.demo-table-expand label {
+		width: 90px;
+		color: #99a9bf;
+	}
+	.demo-table-expand .el-form-item {
+		margin-right: 0;
+		margin-bottom: 0;
+		width: 50%;
+	}
+</style>
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<![endif]-->
+</head>
+<body>
+<!-- banner -->
+	<div class="banner jarallax">
+		<div class="banner-dot">
+			<div class="header-top">
+				<div class="container">
+					<div class="header-top-left">
+						<p><i class="fa fa-home" aria-hidden="true"></i> you are welcome ! </p>
+					</div>
+					<div class="w3layouts-logo">
+						<h1>
+							<a href="/Login/toIndex">天际众筹</a>
+						</h1>
+					</div>
+				</div>
+			</div>
+			<div class="header">
+				<div class="container">
+					<div class="top-nav">
+						<nav class="navbar navbar-default">
+							<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+								<ul class="nav navbar-nav navbar-right">
+									<li><a href="/Login/toIndex">首页</a></li>
+									<li><a href="/Login/toBet" class="active">投注</a></li>
+									<li><a href="/Login/toMy">我的</a></li>
+									<li><a href="/Login/toAgency">代理</a></li>
+									<li><a href="/Login/toWithdrawal">提现</a></li>
+									<li><a href="/Login/LoginOut">退出系统</a></li>
+								</ul>
+								<div class="clearfix"> </div>
+							</div>
+						</nav>
+					</div>
+					<div class="clearfix"> </div>
+				</div>
+			</div>
+			<div class="tlinks">Collect from <a href="/Login/toIndex"  title="天际众筹">天际众筹</a></div>
+		</div>
+	</div>
+<!-- //banner -->
+<!-- abt-w3agile -->
+<div class="abt-w3agile">
+	<div class="container">
+		<h2 class="w3ls_head">本期投注信息展示 </h2>
+		<p class="w3agile">投注信息实时更新 ， 24小时全天候为您服务.</p>
+		<div id="bet" style="margin-top: 20px;">
+			<el-card class="box-card" style="float: left;margin-right: 15%;">
+				<div slot="header" class="clearfix">
+					<span>本期投注信息</span>
+					<el-button style="float: right; padding: 3px 0" type="text" @click="betVisible = true">投一注</el-button>
+					<el-dialog title="投注信息确认" :visible.sync="betVisible">
+						<el-form label-position="left" inline class="demo-table-expand">
+							<el-form-item label="众筹期号">
+								<span>{{ ThisRaise.pserial | serial }}</span>
+							</el-form-item>
+							<el-form-item label="众筹描述">
+								<span>{{ ThisRaise.pdescribe}}</span>
+							</el-form-item>
+							<el-form-item label="我的奖卷">
+								<span>{{ ThisUser.prizenumber }}卷</span>
+							</el-form-item>
+							<el-form-item label="我的金币">
+								<span>{{ ThisUser.goldnumber }}个</span>
+							</el-form-item>
+							<el-form-item label="当前投注">
+								<span>本期第{{ theBit }}注</span>
+							</el-form-item>
+							<el-form-item label="投注所需">
+								<span>{{ prizeNumber }}奖卷 + {{ goldNumber }}金币</span>
+							</el-form-item>
+						</el-form>
+						<div slot="footer" class="dialog-footer">
+							<el-button @click="betVisible = false">取 消</el-button>
+							<el-button type="primary" @click="toBet">投注</el-button>
+						</div>
+					</el-dialog>
+				</div>
+				<el-form label-position="left" inline class="demo-table-expand">
+					<el-form-item label="众筹期号">
+						<span>{{ ThisRaise.pserial | serial }}</span>
+					</el-form-item>
+					<el-form-item label="众筹描述">
+						<span>当前{{ ThisRaise.pdescribe }}</span>
+					</el-form-item>
+					<el-form-item label="众筹状态">
+						<span>{{ ThisRaise.pstate }}</span>
+					</el-form-item>
+					<el-form-item label="当前总注数">
+						<span>{{ ThisRaise.psum }}</span>
+					</el-form-item>
+					<el-form-item label="开奖详情">
+						<span>{{ ThisRaise.pdetails }}</span>
+					</el-form-item>
+				</el-form>
+			</el-card>
+			<el-card class="box-card">
+				<div slot="header" class="clearfix">
+					<span>我的信息</span>
+					<el-button style="float: right; padding: 3px 0;" type="text" @click="betGoldVisible = true">金卷互换</el-button>
+					<el-dialog title="金卷互换确认" :visible.sync="betGoldVisible">
+						<el-form label-position="left" inline class="demo-table-expand">
+							<el-form-item label="持有金币数">
+								<span>{{ ThisUser.goldnumber }}个</span>
+							</el-form-item>
+							<el-form-item label="可兑换奖卷">
+								<span>{{ canBitNum }} 卷</span>
+							</el-form-item>
+							<div class="demo-input-suffix">
+								<el-input
+										placeholder="请输入兑换数量"
+										suffix-icon="el-icon-edit-outline"
+										type="number"
+										v-model="betNum">
+								</el-input>
+							</div>
+						</el-form>
+						<div slot="footer" class="dialog-footer">
+							<el-button @click="betGoldVisible = false">取 消</el-button>
+							<el-button type="primary" @click="toGoldBet">兑换</el-button>
+						</div>
+					</el-dialog>
+					<el-button style="float: right; padding: 3px 0;margin-right: 10px;" type="text" @click="shiftVisible = true">奖卷兑换</el-button>
+					<el-dialog title="奖卷兑换确认" :visible.sync="shiftVisible">
+						<el-form label-position="left" inline class="demo-table-expand">
+							<el-form-item label="账户余额">
+								<span>{{ ThisUser.summoney }}元</span>
+							</el-form-item>
+							<el-form-item label="可兑换奖卷">
+								<span>{{ canMoneyNum }} 卷</span>
+							</el-form-item>
+							<div class="demo-input-suffix">
+								<el-input
+										placeholder="请输入兑换数量"
+										suffix-icon="el-icon-edit-outline"
+										v-model="betNum2">
+								</el-input>
+							</div>
+						</el-form>
+						<div slot="footer" class="dialog-footer">
+							<el-button @click="shiftVisible = false">取 消</el-button>
+							<el-button type="primary" @click="toShiftBet">兑换</el-button>
+						</div>
+					</el-dialog>
+				</div>
+				<el-form label-position="left" inline class="demo-table-expand">
+					<el-form-item label="用户姓名">
+						<span>{{ ThisUser.name }}</span>
+					</el-form-item>
+					<el-form-item label="手机号码">
+						<span>{{ ThisUser.phone }}</span>
+					</el-form-item>
+					<el-form-item label="客户号">
+						<span>{{ ThisUser.userid }}</span>
+					</el-form-item>
+					<el-form-item label="账户金额">
+						<span>{{ ThisUser.summoney }}元</span>
+					</el-form-item>
+					<el-form-item label="奖卷数量">
+						<span>{{ ThisUser.prizenumber }}卷</span>
+					</el-form-item>
+					<el-form-item label="金币数量">
+						<span>{{ ThisUser.goldnumber }}个</span>
+					</el-form-item>
+				</el-form>
+			</el-card>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+</div>
+<style>
+	.text {
+		font-size: 14px;
+	}
+
+	.item {
+		margin-bottom: 18px;
+	}
+
+	.clearfix:before,
+	.clearfix:after {
+		display: table;
+		content: "";
+	}
+	.clearfix:after {
+		clear: both
+	}
+
+	.box-card {
+		width: 480px;
+	}
+</style>
+<script>
+	new Vue({
+		"el" : "#bet",
+		data :{
+			ThisRaise: [],
+			ThisUser: [],
+			theBit: 0,
+			prizeNumber: 0,
+			goldNumber:  0,
+			betNum: null,
+			canBitNum: null,
+			betNum2: null,
+			canMoneyNum: null,
+			betVisible: false,
+			betGoldVisible: false,
+			shiftVisible: false,
+		},
+		filters: {
+			serial: function(value){
+				if(value>=0 && value<10){
+					return '00000' + value;
+				}else if(value>=10 && value<100){
+					return '0000' + value;
+				}else if(value>=100 && value<1000){
+					return '000' + value;
+				}else if(value>=1000 && value<10000){
+					return '00' + value;
+				}else if(value>=10000 && value<100000){
+					return '0' + value;
+				}else if(value>=100000 && value<1000000){
+					return value;
+				}
+			},
+		},
+		created: function(){
+			const loading = this.$loading({
+				lock: true,
+				text: '信息加载中...',
+				spinner: 'el-icon-loading',
+				background: 'hsla(0,0%,100%,.9)'
+			});
+			axios({
+				method: 'get',
+				url: '/Raise/selectThisRaiseAndUser',
+			}).then(res => {
+				this.ThisRaise = res.data.thisRaisePeriods;
+				this.ThisUser = res.data.thisUser;
+				const thisPserial = res.data.thisPserial;
+				this.canBitNum = (this.ThisUser.goldnumber - this.ThisUser.goldnumber % res.data.goldNumber)/res.data.goldNumber;
+				this.canMoneyNum = (this.ThisUser.summoney - this.ThisUser.summoney % res.data.moneyNumber)/res.data.moneyNumber;
+				if(thisPserial==0){
+					this.theBit = 1;
+					this.goldNumber = 0;
+					this.prizeNumber = 1;
+				}else{
+					this.theBit = thisPserial + 1;
+					this.goldNumber = (thisPserial + 1) * 10;
+					this.prizeNumber = thisPserial + 1;
+				}
+				setTimeout(function(){
+					loading.close();
+				},500)
+			});
+		},
+		methods:{
+			toGoldBet(){
+				if(this.betNum > this.canBitNum){
+					this.$message.error("兑换奖卷数不能大于最大可兑换数！");
+				}else if( this.betNum%1 != 0 || this.betNum <=0) {
+					this.$message.error("兑换奖卷数有且只能输入非0正整数！");
+				}else{
+					axios({
+						method: 'post',
+						url: '/Raise/goldToPrize',
+						data: {
+							betNum: this.betNum
+						}
+					}).then(res => {
+						this.ThisUser = res.data.ThisUser;
+						this.canBitNum = (this.ThisUser.goldnumber - this.ThisUser.goldnumber % res.data.goldNumber)/res.data.goldNumber;
+						this.$message.success("兑换成功！");
+						this.betGoldVisible = false;
+					});
+				}
+			},
+			toShiftBet(){
+				if(this.betNum2 > this.canMoneyNum){
+					this.$message.error("兑换奖卷数不能大于最大可兑换数！");
+				}else if( this.betNum2%1 != 0 || this.betNum2 <=0) {
+					this.$message.error("兑换奖卷数有且只能输入非0正整数！");
+				}else{
+					axios({
+						method: 'post',
+						url: '/Raise/moneyToPrize',
+						data: {
+							betNum: this.betNum2
+						}
+					}).then(res => {
+						this.ThisUser = res.data.ThisUser;
+						this.canMoneyNum = (this.ThisUser.summoney - this.ThisUser.summoney % res.data.moneyNumber)/res.data.moneyNumber;
+						this.$message.success("兑换成功！");
+						this.shiftVisible = false;
+					});
+				}
+			},
+			toBet(){
+				if(this.ThisUser.goldnumber<this.goldNumber){
+					this.$message.error("金币数量不足,无法进行投注！");
+				}else if(this.ThisUser.prizenumber<this.prizeNumber){
+					this.$message.error("奖卷数量不足,请先兑换奖卷！");
+				}else{
+					const loading = this.$loading({
+						lock: true,
+						text: '投注信息加载中...',
+						spinner: 'el-icon-loading',
+						background: 'hsla(0,0%,100%,.9)'
+					});
+					axios({
+						method: 'post',
+						url: '/Raise/bitRaise',
+						data: {
+							user: this.ThisUser,
+							periods: this.ThisRaise,
+							goldNumber: this.goldNumber,
+							prizeNumber: this.prizeNumber
+						}
+					}).then(res => {
+						loading.close();
+						this.betVisible = false;
+						this.ThisRaise = res.data.thisRaisePeriods;
+						this.ThisUser = res.data.thisUser;
+						let list = res.data.myThisRaiseBetList;
+						for(let i = 0,length = list.length; i < length; i++){
+							list[i].prizenumber = list[i].prizenumber + '卷';
+							list[i].goldnumber = list[i].goldnumber + '个';
+							if(list[i].betid < 10){
+								list[i].betid = '0' + list[i].betid;
+							}
+							list[i].date = mybet.formatTime(list[i].date,"Y-M-D h:m:s");
+						}
+						mybet.MyThisRaiseBetList = list;
+						const thisPserial = res.data.thisPserial;
+						if(thisPserial==0){
+							this.theBit = 1;
+							this.goldNumber = 0;
+							this.prizeNumber = 1;
+						}else{
+							this.theBit = thisPserial + 1;
+							this.goldNumber = (thisPserial + 1) * 10;
+							this.prizeNumber = thisPserial + 1;
+						}
+						this.$message.success("投注成功！");
+					});
+				}
+			}
+		}
+	});
+</script>
+
+<!-- wthree-mid -->
+<div class="wthree-mid jarallax">
+	<div class="container">
+		<h3>温 馨 提 示</h3>
+		<p>如果您在使用本网页的过程中有任何疑问，可以通过网页最下方的联系方式联系我们.</p>
+	</div>
+</div>
+<!-- //wthree-mid -->
+
+<!-- abt-w3agile -->
+<div class="abt-w3agile">
+	<div class="container">
+		<h2 class="w3ls_head">本期我的投注记录 </h2>
+		<p class="w3agile">投注信息实时更新 ， 24小时全天候为您服务.</p>
+		<div id="mybet" style="margin-top: 20px;">
+			<template>
+				<el-table
+						:data="MyThisRaiseBetList"
+						border
+						height="250"
+						style="width: 100%; margin-top: 20px">
+					<el-table-column
+							prop="buserid"
+							label="投注人客户号">
+					</el-table-column>
+					<el-table-column
+							prop="prizenumber"
+							label="投注奖卷数">
+					</el-table-column>
+					<el-table-column
+							prop="goldnumber"
+							label="投注金币数">
+					</el-table-column>
+					<el-table-column
+							prop="betid"
+							label="投注号码">
+					</el-table-column>
+					<el-table-column
+							prop="state"
+							label="投注状态">
+					</el-table-column>
+					<el-table-column
+							prop="date"
+							label="投注时间">
+					</el-table-column>
+				</el-table>
+			</template>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+</div>
+<script>
+	let mybet = new Vue({
+		"el" : "#mybet",
+		data :{
+			MyThisRaiseBetList: [],
+		},
+		methods:{
+			formatNumber: function(n) {
+				n = n.toString()
+				return n[1] ? n : '0' + n;
+			},
+			formatTime: function(number, format) {
+				let time = new Date(number)
+				let newArr = []
+				let formatArr = ['Y', 'M', 'D', 'h', 'm', 's']
+				newArr.push(time.getFullYear())
+				newArr.push(this.formatNumber(time.getMonth() + 1))
+				newArr.push(this.formatNumber(time.getDate()))
+
+				newArr.push(this.formatNumber(time.getHours()))
+				newArr.push(this.formatNumber(time.getMinutes()))
+				newArr.push(this.formatNumber(time.getSeconds()))
+
+				for (let i in newArr) {
+					format = format.replace(formatArr[i], newArr[i])
+				}
+				return format;
+			}
+		},
+		created: function(){
+			axios({
+				method: 'get',
+				url: '/Raise/queryMyThisRaiseBetList',
+			}).then(res => {
+				let list = res.data.myThisRaiseBetList;
+				for(let i = 0,length = list.length; i < length; i++){
+					list[i].prizenumber = list[i].prizenumber + '卷';
+					list[i].goldnumber = list[i].goldnumber + '个';
+					if(list[i].betid < 10){
+						list[i].betid = '0' + list[i].betid;
+					}
+					list[i].date = this.formatTime(list[i].date,"Y-M-D h:m:s");
+				}
+				this.MyThisRaiseBetList = list;
+			});
+		}
+	});
+</script>
+<!-- footer -->
+<div class="w3-agile-footer" id="windows">
+	<div class="container">
+		<div class="footer-grids">
+			<div class="col-md-3 footer-grid">
+				<div class="footer-grid-heading">
+					<h4>联系方式</h4>
+				</div>
+				<div class="footer-grid-info">
+					<p class="phone">客服电话 : {{ ServiceTel }}
+						<span>邮箱 : {{ Email }}</span>
+						<span>微信 : {{ WeiXin }}</span>
+						<span>QQ : {{ TxQQ }}</span>
+					</p>
+				</div>
+			</div>
+			<div class="col-md-3 footer-grid">
+				<div class="footer-grid-heading">
+					<h4>网站路由</h4>
+				</div>
+				<div class="footer-grid-info">
+					<ul>
+						<li><a href="/Login/toIndex">网站首页</a></li>
+						<li><a href="/Login/toBet">投注</a></li>
+						<li><a href="/Login/toMy">我的</a></li>
+						<li><a href="/Login/toAgency">代理</a></li>
+						<li><a href="/Login/toWithdrawal">提现</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-md-3 footer-grid">
+				<div class="footer-grid-heading">
+					<h4>网站信息</h4>
+				</div>
+				<div class="agile-footer-grid">
+					<ul class="w3agile_footer_grid_list">
+						<li>请记住我们的域名： <a href="/Login/toIndex">{{ DomainName }}</a>
+					</ul>
+				</div>
+			</div>
+			<div class="col-md-3 footer-grid">
+				<div class="footer-grid-heading">
+					<h4>标识信息</h4>
+				</div>
+				<div class="social">
+					<ul>
+						<li><a href="/Login/toIndex"><i class="fa fa-facebook"></i></a></li>
+						<li><a href="/Login/toIndex"><i class="fa fa-twitter"></i></a></li>
+						<li><a href="/Login/toIndex"><i class="fa fa-rss"></i></a></li>
+						<li><a href="/Login/toIndex"><i class="fa fa-vk"></i></a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="clearfix"> </div>
+		</div>
+	</div>
+</div>
+<script>
+	new Vue({
+		"el" : "#windows",
+		data :{
+			ServiceTel: null,
+			Email: null,
+			WeiXin: null,
+			TxQQ: null,
+			DomainName: null
+		},
+		created: function(){
+			axios({
+				method: 'get',
+				url: '/Raise/selecWindows',
+			}).then(res => {
+				this.ServiceTel = res.data.ServiceTel;
+				this.Email = res.data.Email;
+				this.WeiXin = res.data.WeiXin;
+				this.TxQQ = res.data.TxQQ;
+				this.DomainName = res.data.DomainName;
+			});
+		}
+	});
+</script>
+</body>	
+</html>

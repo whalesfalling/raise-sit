@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.the.raise.dao.RaisePeriodsMapper" >
+  <resultMap id="BaseResultMap" type="com.the.raise.model.RaisePeriods" >
+    <id column="pserial" property="pserial" jdbcType="INTEGER" />
+    <result column="pamount" property="pamount" jdbcType="REAL" />
+    <result column="pstate" property="pstate" jdbcType="VARCHAR" />
+    <result column="psum" property="psum" jdbcType="INTEGER" />
+    <result column="pdetails" property="pdetails" jdbcType="VARCHAR" />
+    <result column="pdescribe" property="pdescribe" jdbcType="VARCHAR" />
+    <result column="psubjection" property="psubjection" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    pserial, pamount, pstate, psum, pdetails, pdescribe, psubjection
+  </sql>
+
+  <select id="selectRaisePeriodsList" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from raise_periods order by pserial desc
+  </select>
+
+  <select id="QueryRaisePeriodsNumber" resultType="java.lang.Integer">
+    select
+    count(*)
+    from raise_periods
+  </select>
+
+  <insert id="AddRaisePeriods" parameterType="com.the.raise.model.RaisePeriods" >
+    insert into raise_periods (pamount, pstate,
+      psum, pdetails, pdescribe, 
+      psubjection)
+    values (#{pamount,jdbcType=REAL}, #{pstate,jdbcType=VARCHAR},
+      #{psum,jdbcType=INTEGER}, #{pdetails,jdbcType=VARCHAR}, #{pdescribe,jdbcType=VARCHAR}, 
+      #{psubjection,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.the.raise.model.RaisePeriods" >
+    update raise_periods
+    set pamount = #{pamount,jdbcType=REAL},
+      pstate = #{pstate,jdbcType=VARCHAR},
+      psum = #{psum,jdbcType=INTEGER},
+      pdetails = #{pdetails,jdbcType=VARCHAR},
+      pdescribe = #{pdescribe,jdbcType=VARCHAR},
+      psubjection = #{psubjection,jdbcType=VARCHAR}
+    where pserial = #{pserial,jdbcType=INTEGER}
+  </update>
+</mapper>

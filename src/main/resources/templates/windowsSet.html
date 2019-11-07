@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8">
+    <title>天际众筹</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <!-- Le styles -->
+    <link href="http://fonts.googleapis.com/css?family=Oxygen|Marck+Script" rel="stylesheet" type="text/css">
+    <link href="/admin/css/bootstrap.css" rel="stylesheet">
+    <link href="/admin/css/font-awesome.css" rel="stylesheet">
+    <link href="/admin/css/admin.css" rel="stylesheet">
+	<link rel="shortcut icon" href="/assets/ico/favicon.png">
+	<link rel="stylesheet" href="/node_modules/element-ui/lib/theme-chalk/index.css">
+	<script src="/node_modules/vue/dist/vue.js"></script>
+	<script src="/node_modules/element-ui/lib/index.js"></script>
+	<script src="/node_modules/axios/dist/axios.min.js"></script>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+	<style>
+		.demo-table-expand {
+			font-size: 0;
+		}
+		.demo-table-expand label {
+			width: 160px;;
+			color: #99a9bf;
+		}
+		.demo-table-expand .el-form-item {
+			margin-right: 0;
+			margin-bottom: 0;
+			width: 100%;
+		}
+		.el-form-item input{
+			height: 40px;
+			width: 415px;
+			margin-right: 50px;
+		}
+	</style>
+</head>    
+<body>
+
+<div class="container">
+		
+	<div class="row">
+		
+		<div class="span2">
+		
+		<div class="main-left-col">
+		
+			<h1><i class="icon-shopping-cart icon-large"></i> Adminize </h1>
+			
+			<ul class="side-nav" id="top">
+				<li>
+					<a href="/Login/toAdmin"><i class="icon-home"></i> 首页</a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toTopUpDispose"><i class="icon-shopping-cart"></i> 充值信息处理 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toTopUpHistory"><i class="icon-sitemap"></i> 充值历史记录 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toAgencyDispose"><i class="icon-signal"></i> 代理信息查询 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toWithdrawalDispose"><i class="icon-group"></i> 提现申请处理 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toWithdrawalHistory"><i class="icon-sitemap"></i> 提现历史记录 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toAddAdmin"><i class="icon-bullhorn"></i> 新增后台人员 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toUploadImg"><i class="icon-info-sign"></i> 付款二维码 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toSystemSet"><i class="icon-cogs"></i> 系统基础设置 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toWindowsSet"><i class="icon-cogs"></i> 联系方式设置 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toUseUserList"><i class="icon-sitemap"></i> 普通用户查询 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toAgencyUserList"><i class="icon-signal"></i> 代理用户查询 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toSystemUserList"><i class="icon-group"></i> 后台人员查询 </a>
+				</li>
+			</ul>
+		
+		</div> <!-- end main-left-col -->
+	
+	</div> <!-- end span2 -->
+<script>
+  new Vue({
+		"el" : "#top",
+		data :{
+			userIdentity: 3,
+		},
+		created: function(){
+			axios({
+				method: 'get',
+				url: '/Admin/queryLoginUser',
+			}).then(res => {
+				this.userIdentity = res.data.user.identity;
+			});
+		}
+	});
+</script>
+	<div class="span10">
+		
+	<div class="secondary-masthead">
+	
+		<ul class="nav nav-pills pull-right">
+			<li class="dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-user"></i> 系统设置 <b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="/Login/toSetPassword">修改密码</a></li>
+					<li class="divider"></li>
+					<li><a href="/Login/LoginOut">退出</a></li>
+				</ul>
+			</li>
+		</ul>
+
+		<ul class="breadcrumb">
+			<li>
+				<a href="#">Admin</a> <span class="divider">/</span>
+			</li>
+			<li class="active">联系方式设置</li>
+		</ul>
+		
+	</div>
+	
+	<div class="main-area dashboard" id="context">
+		<div>
+			<el-card class="box-card">
+				<div slot="header" class="clearfix">
+					<span style="font-size: 16px;">联系方式设置</span>
+				</div>
+				<el-form label-position="left" inline class="demo-table-expand">
+					<el-form-item label="客服电话">
+						<div style="float:left;"><el-input v-model="value1"></el-input></div>
+						<div style="float:left;"><el-button type="primary" @click="submitForm('客服电话',value1)">修改</el-button></div>
+					</el-form-item>
+					<div style="background: #EBEEF5;width: 100%; height: 1px;margin-bottom: 20px;margin-top: 10px;"></div>
+					<el-form-item label="邮箱">
+						<div style="float:left;"><el-input v-model="value2"></el-input></div>
+						<div style="float:left;"><el-button type="primary" @click="submitForm('邮箱',value2)">修改</el-button></div>
+					</el-form-item>
+					<div style="background: #EBEEF5;width: 100%; height: 1px;margin-bottom: 20px;margin-top: 10px;"></div>
+					<el-form-item label="微信">
+						<div style="float:left;"><el-input v-model="value3"></el-input></div>
+						<div style="float:left;"><el-button type="primary" @click="submitForm('微信',value3)">修改</el-button></div>
+					</el-form-item>
+					<div style="background: #EBEEF5;width: 100%; height: 1px;margin-bottom: 20px;margin-top: 10px;"></div>
+					<el-form-item label="QQ">
+						<div style="float:left;"><el-input v-model="value4"></el-input></div>
+						<div style="float:left;"><el-button type="primary" @click="submitForm('QQ',value4)">修改</el-button></div>
+					</el-form-item>
+					<div style="background: #EBEEF5;width: 100%; height: 1px;margin-bottom: 20px;margin-top: 10px;"></div>
+					<el-form-item label="域名">
+						<div style="float:left;"><el-input v-model="value5"></el-input></div>
+						<div style="float:left;"><el-button type="primary" @click="submitForm('域名',value5)">修改</el-button></div>
+					</el-form-item>
+				</el-form>
+			</el-card>
+		</div>
+	</div>
+	
+	</div> <!-- end span10 -->
+		
+	</div> <!-- end row -->
+		
+</div> <!-- end container -->
+<style>
+	.text {
+		font-size: 14px;
+	}
+
+	.item {
+		padding: 18px 0;
+	}
+
+	.box-card {
+		width:80%;
+		margin-left: 10%;
+	}
+</style>
+<script>
+	let Vuebit = new Vue({
+		"el" : "#context",
+		data :{
+			value1: null,
+			value2: null,
+			value3: null,
+			value4: null,
+			value5: null
+		},
+		methods:{
+			submitForm:function (key,value) {
+				if(value==null || value.length == 0){
+					this.$message.error("联系方式不能为控");
+				}else{
+					axios({
+						method: 'post',
+						url: '/Admin/editSystem',
+						data: {
+							key: key,
+							value: value
+						}
+					}).then(res => {
+						this.$notify({
+							title: '系统消息',
+							message: '联系方式设置更新成功！',
+							type: 'success'
+						});
+					});
+				}
+			}
+		},
+		created: function(){
+			axios({
+				method: 'get',
+				url: '/Admin/queryWindows',
+			}).then(res => {
+				this.value1 = res.data.value1;
+				this.value2 = res.data.value2;
+				this.value3 = res.data.value3;
+				this.value4 = res.data.value4;
+				this.value5 = res.data.value5
+			});
+		}
+	});
+</script>
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="/admin/js/jquery.min.js"></script>
+<script src="/admin/js/bootstrap.js"></script>
+
+
+
+</body>
+</html>

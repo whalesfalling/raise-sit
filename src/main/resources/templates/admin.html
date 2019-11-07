@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8">
+    <title>天际众筹</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <!-- Le styles -->
+    <link href="http://fonts.googleapis.com/css?family=Oxygen|Marck+Script" rel="stylesheet" type="text/css">
+    <link href="/admin/css/bootstrap.css" rel="stylesheet">
+    <link href="/admin/css/font-awesome.css" rel="stylesheet">
+    <link href="/admin/css/admin.css" rel="stylesheet">
+	<link rel="shortcut icon" href="/assets/ico/favicon.png">
+	<link rel="stylesheet" href="/node_modules/element-ui/lib/theme-chalk/index.css">
+	<script src="/node_modules/vue/dist/vue.js"></script>
+	<script src="/node_modules/element-ui/lib/index.js"></script>
+	<script src="/node_modules/axios/dist/axios.min.js"></script>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+	<style>
+		.demo-table-expand {
+			font-size: 0;
+		}
+		.demo-table-expand label {
+			width: 90px;
+			color: #99a9bf;
+		}
+		.demo-table-expand .el-form-item {
+			margin-right: 0;
+			margin-bottom: 0;
+			width: 50%;
+		}
+	</style>
+</head>    
+<body>
+
+<div class="container">
+		
+	<div class="row">
+		
+		<div class="span2">
+		
+		<div class="main-left-col">
+		
+			<h1><i class="icon-shopping-cart icon-large"></i> Adminize </h1>
+
+			<ul class="side-nav" id="top">
+				<li>
+					<a href="/Login/toAdmin"><i class="icon-home"></i> 首页</a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toTopUpDispose"><i class="icon-shopping-cart"></i> 充值信息处理 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toTopUpHistory"><i class="icon-sitemap"></i> 充值历史记录 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toAgencyDispose"><i class="icon-signal"></i> 代理信息查询 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toWithdrawalDispose"><i class="icon-group"></i> 提现申请处理 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 2">
+					<a class="dropdown-toggle" href="/Login/toWithdrawalHistory"><i class="icon-sitemap"></i> 提现历史记录 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toAddAdmin"><i class="icon-bullhorn"></i> 新增后台人员 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toUploadImg"><i class="icon-info-sign"></i> 付款二维码 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toSystemSet"><i class="icon-cogs"></i> 系统基础设置 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toWindowsSet"><i class="icon-cogs"></i> 联系方式设置 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toUseUserList"><i class="icon-sitemap"></i> 普通用户查询 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toAgencyUserList"><i class="icon-signal"></i> 代理用户查询 </a>
+				</li>
+				<li class="dropdown" v-if="userIdentity == 3">
+					<a class="dropdown-toggle" href="/Login/toSystemUserList"><i class="icon-group"></i> 后台人员查询 </a>
+				</li>
+			</ul>
+
+		</div> <!-- end main-left-col -->
+
+		</div> <!-- end span2 -->
+		<script>
+			new Vue({
+				"el" : "#top",
+				data :{
+					userIdentity: 2,
+				},
+				created: function(){
+					axios({
+						method: 'get',
+						url: '/Admin/queryLoginUser',
+					}).then(res => {
+						this.userIdentity = res.data.user.identity;
+					});
+				}
+			});
+		</script>
+	<div class="span10">
+		
+	<div class="secondary-masthead">
+	
+		<ul class="nav nav-pills pull-right">
+			<li class="dropdown">
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-user"></i> 系统设置 <b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu">
+					<li><a href="/Login/toSetPassword">修改密码</a></li>
+					<li class="divider"></li>
+					<li><a href="/Login/LoginOut">退出</a></li>
+				</ul>
+			</li>
+		</ul>
+
+		<ul class="breadcrumb">
+			<li>
+				<a href="#">Admin</a> <span class="divider">/</span>
+			</li>
+			<li class="active">首页</li>
+		</ul>
+		
+	</div>
+	
+	<div class="main-area dashboard" id="context">
+		<div class="row">
+			<div class="span10">
+				<div class="slate clearfix">
+					<a class="stat-column" href="#">
+						<span class="number">{{ commonUser }}</span>
+						<span>普通用户数</span>
+					</a>
+					<a class="stat-column" href="#">
+						<span class="number">{{ periodsNumber }}</span>
+						<span>众筹总期数</span>
+					</a>
+					<a class="stat-column" href="#">
+						<span class="number">{{ volumeNumber }}</span>
+						<span>奖卷兑换数</span>
+					</a>
+					<a class="stat-column" href="#">
+						<span class="number">{{ agencyUser }}</span>
+						<span>代理用户数</span>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div>
+			<el-card class="box-card">
+				<div slot="header" class="clearfix">
+					<span style="font-size: 16px;">本期众筹信息</span>
+					<el-button style="float: right; padding: 3px 0;" type="text" @click="shiftVisible = true">本期开注</el-button>
+					<el-dialog title="开注信息确认" :visible.sync="shiftVisible">
+						<el-form label-position="left" inline class="demo-table-expand">
+							<el-form-item label="众筹期号">
+								<span>{{ thisRaise.pserial | serial }}</span>
+							</el-form-item>
+							<el-form-item label="众筹描述">
+								<span>{{ thisRaise.pdescribe}}</span>
+							</el-form-item>
+							<el-form-item label="本期总金额">
+								<span>{{ thisRaise.pamount }}元</span>
+							</el-form-item>
+							<el-form-item label="本期状态">
+								<span>{{ thisRaise.pstate }}</span>
+							</el-form-item>
+							<el-form-item label="本期投注数">
+								<span>{{ thisRaise.psum }}注</span>
+							</el-form-item>
+							<el-form-item label="本期奖卷数">
+								<span>{{ betVserialNumber }}卷</span>
+							</el-form-item>
+						</el-form>
+						<div slot="footer" class="dialog-footer">
+							<el-button @click="shiftVisible = false">取 消</el-button>
+							<el-button type="primary" @click="lottery">开 奖</el-button>
+						</div>
+					</el-dialog>
+				</div>
+				<el-form label-position="left" inline class="demo-table-expand">
+					<el-form-item label="期数编号">
+						<span>{{ thisRaise.pserial | serial }}</span>
+					</el-form-item>
+					<el-form-item label="期数总金额">
+						<span>{{ thisRaise.pamount }}元</span>
+					</el-form-item>
+					<el-form-item label="期数状态">
+						<span>{{ thisRaise.pstate }}</span>
+					</el-form-item>
+					<el-form-item label="投注总数">
+						<span>{{ thisRaise.psum }}注</span>
+					</el-form-item>
+					<el-form-item label="众筹描述">
+						<span>{{ thisRaise.pdescribe}}</span>
+					</el-form-item>
+					<el-form-item label="本期奖卷数">
+						<span>{{ betVserialNumber }}卷</span>
+					</el-form-item>
+				</el-form>
+			</el-card>
+		</div>
+	</div>
+
+	<div slot="header" class="clearfix" style="margin-top: 50px;">
+			<span style="font-size: 28px;margin-left: 40%;">上期开奖中奖名单</span>
+			<div style="width: 80%;margin-left: 10%;" id="win">
+				<template>
+					<el-table
+							:data="raiseWinList"
+							border
+							height="250"
+							style="width: 100%; margin-top: 20px">
+						<el-table-column
+								prop="pserial"
+								label="名单所属期号">
+						</el-table-column>
+						<el-table-column
+								prop="name"
+								label="中奖人名">
+						</el-table-column>
+						<el-table-column
+								prop="phone"
+								label="中奖人电话">
+						</el-table-column>
+						<el-table-column
+								prop="wnoun"
+								label="获奖名次">
+						</el-table-column>
+						<el-table-column
+								prop="wmoney"
+								label="获奖金额">
+						</el-table-column>
+					</el-table>
+				</template>
+			</div>
+		</div>
+	
+	</div> <!-- end span10 -->
+		
+	</div> <!-- end row -->
+		
+</div> <!-- end container -->
+<script>
+	let win = new Vue({
+		"el" : "#win",
+		data :{
+			raiseWinList: [],
+		},
+		created: function(){
+			axios({
+				method: 'get',
+				url: '/Raise/selectRaiseWinList',
+			}).then(res => {
+				let raiseWinList = res.data.raiseWinList;
+				let winUserList = res.data.winUserList;
+				if(raiseWinList!=null&&winUserList!=null) {
+					for (let i = 0, length = raiseWinList.length; i < length; i++) {
+						for (let j = 0, length = winUserList.length; j < length; j++) {
+							if (raiseWinList[i].wuserid == winUserList[j].userid) {
+								raiseWinList[i].phone = winUserList[j].phone;
+								raiseWinList[i].name = winUserList[j].name;
+								raiseWinList[i].pserial = "众筹第" + raiseWinList[i].wperiodsid + "期";
+							}
+						}
+					}
+				}
+				this.raiseWinList = raiseWinList;
+			});
+		}
+	});
+</script>
+<style>
+	.text {
+		font-size: 14px;
+	}
+
+	.item {
+		padding: 18px 0;
+	}
+
+	.box-card {
+		width:80%;
+		margin-left: 10%;
+	}
+</style>
+<script>
+	let Vuebit = new Vue({
+		"el" : "#context",
+		data :{
+			commonUser: 0,
+			agencyUser: 0,
+			periodsNumber: 0,
+			periodsNumber: 0,
+			thisRaise: [],
+			volumeNumber: 0,
+			betVserialNumber: 0,
+			shiftVisible: false
+		},
+		created: function(){
+			axios({
+				method: 'get',
+				url: '/Admin/adminContext',
+			}).then(res => {
+				this.commonUser = res.data.commonUser;
+				this.agencyUser = res.data.agencyUser;
+				this.periodsNumber = res.data.periodsNumber;
+				this.thisRaise = res.data.thisRaise;
+				this.volumeNumber = res.data.volumeNumber;
+				this.betVserialNumber = res.data.betVserialNumber;
+			});
+		},
+		filters: {
+			capitalize: function (value) {
+				if (!value) return ''
+				value = value.replace(/-/g," ");
+				return value;
+			},
+			serial: function(value){
+				if(value>=0 && value<10){
+					return '00000' + value;
+				}else if(value>=10 && value<100){
+					return '0000' + value;
+				}else if(value>=100 && value<1000){
+					return '000' + value;
+				}else if(value>=1000 && value<10000){
+					return '00' + value;
+				}else if(value>=10000 && value<100000){
+					return '0' + value;
+				}else if(value>=100000 && value<1000000){
+					return value;
+				}
+			}
+		},
+		methods:{
+			lottery: function () {
+				axios({
+					method: 'get',
+					url: '/Admin/lottery',
+				}).then(res => {
+					if(res.data.error!=null){
+						this.$message.error(res.data.error);
+					}else{
+						let raiseWinList = res.data.raiseWinList;
+						let winUserList = res.data.winUserList;
+						if(raiseWinList!=null&&winUserList!=null) {
+							for (let i = 0, length = raiseWinList.length; i < length; i++) {
+								for (let j = 0, length = winUserList.length; j < length; j++) {
+									if (raiseWinList[i].wuserid == winUserList[j].userid) {
+										raiseWinList[i].phone = winUserList[j].phone;
+										raiseWinList[i].name = winUserList[j].name;
+										raiseWinList[i].pserial = "众筹第" + raiseWinList[i].wperiodsid + "期";
+									}
+								}
+							}
+						}
+						win.raiseWinList = raiseWinList;
+						this.commonUser = res.data.commonUser;
+						this.agencyUser = res.data.agencyUser;
+						this.periodsNumber = res.data.periodsNumber;
+						this.thisRaise = res.data.thisRaise;
+						this.volumeNumber = res.data.volumeNumber;
+						this.betVserialNumber = res.data.betVserialNumber;
+						this.shiftVisible = false;
+					}
+
+				});
+			}
+		}
+	});
+</script>
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="/admin/js/jquery.min.js"></script>
+<script src="/admin/js/bootstrap.js"></script>
+
+
+
+</body>
+</html>
