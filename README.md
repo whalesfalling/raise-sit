@@ -1,3 +1,11 @@
-# raise 天翼众筹系统是采用Springboot + mybatis + javascript + mysql编写的众筹类项目.
+## 1.项目中文名称: 天翼众筹系统 ##
 
-# 系统启动时间为2018年3月，下线时间为2020.6月
+## 2.项目英文名称: raise-sit ##
+
+## 3.项目简介： ## 
+### 采用Springboot + mybatis + javascript + mysql编写的众筹类项目. ###
+
+## 4.安装说明 ##
+### 安装环境变量 jdk1.7 + maven 5.0 + 数据库 mysql 4.1 ###
+
+### 系统启动时间为2018年3月，下线时间为2020.6月 ###
